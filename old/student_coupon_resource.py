@@ -1,5 +1,5 @@
 
-from data_service import MySQLDataService
+from services.data_service import MySQLDataService
 
 
 class StudentCouponResource:

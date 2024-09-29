@@ -1,9 +1,9 @@
 import pymysql
 import os
-from dff_framework.framework.services.data_access.MySQLRDBDataService import MySQLRDBDataService as BaseService
+from dff_framework.framework.services.data_access.MySQLRDBDataService import MySQLRDBDataService
 
 
-class CouponDataService(BaseService):
+class CouponDataService(MySQLRDBDataService):
 
     student_table_name = "course_student_coupons.student_coupons"
     student_table_full = "course_student_coupons.student_coupons_full"
@@ -19,6 +19,13 @@ class CouponDataService(BaseService):
         self.config = config
         self.student_table_name = CouponDataService.student_table_name
         self.coupon_table_name = CouponDataService.coupon_table_name
+
+    def test_connection(self):
+        conn = self._get_connection()
+        table_name = self.student_table_name
+        sql = f"describe {table_name}"
+        result = self.run_query(sql)
+        return result
 
     def get_student_info(self, email):
         """

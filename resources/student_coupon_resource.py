@@ -1,7 +1,9 @@
 from typing import Any
 
 from dff_framework.framework.resources.base_resource import BaseResource
-from data_service import CouponDataService
+from dff_framework.framework.services.config import Config
+
+from services.data_service import CouponDataService
 
 
 class StudentCouponResource(BaseResource):
@@ -9,15 +11,12 @@ class StudentCouponResource(BaseResource):
     def get_by_key(self, key: str) -> Any:
         pass
 
-    def __init__(self, config):
+    def __init__(self, config: Config):
         super().__init__(config)
+        self.config = config
 
     def get_data_service(self) -> CouponDataService:
-        if self.config is None:
-            self.config = dict()
-            self.config["data_service"] = CouponDataService()
-
-        result = self.config.get("data_service")
+        result = self.config.get_config("COUPON_DATA_SERVICE")
         return result
 
     def get_student_info(self, email):
@@ -46,6 +45,7 @@ class StudentCouponResource(BaseResource):
         data_service.assign_coupon(student['email'], coupon['test_coupon'])
         return result
         """
+        raise NotImplementedError()
 
 
 

@@ -1,6 +1,5 @@
 """Google Login Example
 """
-
 import os
 import uvicorn
 from fastapi import FastAPI, Request
@@ -8,19 +7,29 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi_sso.sso.google import GoogleSSO
 import json
 
-from fastapi.staticfiles import StaticFiles
-from student_coupon_resource import StudentCouponResource
-student_coupon_service = StudentCouponResource(None)
+from resources.student_coupon_resource import StudentCouponResource
+from dff_framework.framework.services.config import Config
+from services.coupon_service_factory import CouponServiceFactory
 
-import env
+
+from fastapi.staticfiles import StaticFiles
+from resources.student_coupon_resource import StudentCouponResource
+
+
+config = Config()
+service_factory = CouponServiceFactory(config)
+
+student_coupon_resource = service_factory.get_service("COUPON_RESOURCE")
+
+# import env
 
 app = FastAPI()
 
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
-CLIENT_ID = os.environ["CLIENT_ID"]
-CLIENT_SECRET = os.environ["CLIENT_SECRET"]
-OAUTH_URL = os.environ.get("OAUTH_URL", "http://localhost:5001")
+CLIENT_ID = config.get_config("CLIENT_ID")
+CLIENT_SECRET = config.get_config("CLIENT_SECRET")
+OAUTH_URL = config.get_config("OAUTH_URL")
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -52,12 +61,13 @@ def ping():
     """
     return rsp
 
+
 @app.get("/", response_class=HTMLResponse)
 async def home_page():
     print("Current directory = " + os.getcwd())
     print("Files = " + str(os.listdir("./")))
 
-    result = """
+    html = """
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -96,7 +106,7 @@ async def home_page():
         <div class="container">
         <p>
         This is the sample web application for <a href="https://donald-f-ferguson.github.io/W4153-Cloud-Computing-Base/">
-        W4153 - Cloud Computing.</a> 
+        W4153 - Cloud Computing.</a>
         </p>
         <p>The application simply demonstrates single sign-on
         via Google for Columbia University students.
@@ -107,7 +117,7 @@ async def home_page():
         </p>
         <form action="{OAUTH_URL}/auth/login">
             <div class="logo">
-                <img src="{OAUTH_URL}/static/e6156-logo.jpg" 
+                <img src="http://localhost:5001/static/e6156-logo.jpg"
                     height="100px" alt="Google Logo">
             </div>
             <h2>Sign in with your Google Account</h2>
@@ -117,9 +127,10 @@ async def home_page():
     </body>
     </html>
     """
-
-    result = result.replace("{OAUTH_URL}", OAUTH_URL)
+    html = html.replace("{OAUTH_URL}", OAUTH_URL)
+    result = HTMLResponse(html)
     return result
+
 
 @app.get("/auth/login")
 async def auth_init():
@@ -143,7 +154,7 @@ async def auth_callback(request: Request):
             next_url = "./next?code=" + code
 
             student = user.email
-            student = student_coupon_service.get_info(student)
+            student = student_coupon_resource.get_info(student)
 
             print("Student = \n", json.dumps(student, indent=2, default=str))
             coupon = student.get("student_coupon_code", None)

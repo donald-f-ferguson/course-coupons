@@ -1,12 +1,18 @@
-from data_service import CouponDataService
+from dff_framework.framework.services.config import Config
+from services.data_service import CouponDataService
+from services.coupon_service_factory import CouponServiceFactory
 import json
+
+config = Config()
+service_factory = CouponServiceFactory(config)
 
 
 def get_db_service():
-    context = dict(user="root", password="dbuserdbuser",
-                   host="localhost", port=3306)
-    ds = CouponDataService(config=context)
+    ds = service_factory.get_service("COUPON_DATA_SERVICE")
+    result = ds.test_connection()
+    print("Connection test = \n", json.dumps(result, indent=2, default=str))
     return ds
+
 
 def t2():
     ds = get_db_service()
@@ -37,8 +43,6 @@ def t5():
 
 def t1():
     ds = get_db_service()
-    result = ds.get_or_assign_coupon('dff9@columbia.edu')
-    print("t1: result = ", json.dumps(result, indent=2))
     """
     result = ds.get_or_assign_coupon('dff9@columbia.edu')
     print("t1: result = ", json.dumps(result, indent=2))
@@ -48,9 +52,12 @@ def t1():
     print("t1: result = ", json.dumps(result, indent=2))
     """
 
+
 if __name__ == "__main__":
+    db = get_db_service()
+    print("The DB service is:", db)
     # t2()
-    # t3()
+    t3()
     # t4()
-    t5()
+    # t5()
 
