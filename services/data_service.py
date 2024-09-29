@@ -43,8 +43,10 @@ class CouponDataService(MySQLRDBDataService):
             return_results=True,
             commit=True
         )
-
-
+        if len(result) == 1:
+            final_result = result[0]
+        else:
+            final_result = None
 
         return result
 
