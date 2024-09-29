@@ -67,7 +67,7 @@ async def home_page():
     print("Current directory = " + os.getcwd())
     print("Files = " + str(os.listdir("./")))
 
-    html = """
+    html = f"""
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -117,7 +117,7 @@ async def home_page():
         </p>
         <form action="{OAUTH_URL}/auth/login">
             <div class="logo">
-                <img src="http://localhost:5001/static/e6156-logo.jpg"
+                <img src="{OAUTH_URL}/static/e6156-logo.jpg"
                     height="100px" alt="Google Logo">
             </div>
             <h2>Sign in with your Google Account</h2>
