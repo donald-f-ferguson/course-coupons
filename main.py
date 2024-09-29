@@ -156,7 +156,7 @@ async def auth_callback(request: Request):
             student = user.email
             student = student_coupon_resource.get_info(student)
 
-            print("Student = \n", json.dumps(student, indent=2, default=str))
+            print("In auth_callback: Student = \n", json.dumps(student, indent=2, default=str))
             coupon = student.get("student_coupon_code", None)
             test_coupon = student.get("test_coupon", None)
             coupon_value = student.get("amount", "")
@@ -206,7 +206,7 @@ async def auth_callback(request: Request):
             user = await sso.verify_and_process(request)
             data = user
 
-            student = my_sql_data_service.get_student_info(user.email)
+            student = student_coupon_resource.get_info(student)
             print("Student = \n", json.dumps(student, indent=2, default=str))
             coupon = student.get("student_coupon_code", None)
             coupon_value = student.get("Value", None)

@@ -1,3 +1,5 @@
+import json
+
 import pymysql
 import os
 from dff_framework.framework.services.data_access.MySQLRDBDataService import MySQLRDBDataService
@@ -41,6 +43,8 @@ class CouponDataService(MySQLRDBDataService):
             return_results=True,
             commit=True
         )
+
+
 
         return result
 
@@ -131,5 +135,7 @@ class CouponDataService(MySQLRDBDataService):
             self.assign_coupon(email, free_coupon['coupon_code'])
 
             final_result = self.get_student_info(email)
+
+        print("get_or_assign_coupon: final_result = ", json.dumps(final_result, indent=2, default=str))
 
         return final_result
