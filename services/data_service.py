@@ -48,7 +48,7 @@ class CouponDataService(MySQLRDBDataService):
         else:
             final_result = None
 
-        return result
+        return final_result
 
     def get_free_coupon(self):
         """
@@ -124,8 +124,8 @@ class CouponDataService(MySQLRDBDataService):
         """
 
         student_info = self.get_student_info(email)
-        if student_info:
-            student_info = student_info[0]
+        # if student_info:
+        #   # student_info = student_info[0]
 
         if student_info['coupon_code']:
             final_result = student_info
