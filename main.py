@@ -67,7 +67,7 @@ async def home_page():
     print("Current directory = " + os.getcwd())
     print("Files = " + str(os.listdir("./")))
 
-    html = f"""
+    html = """
     <!DOCTYPE html>
     <html lang="en">
     <head>
