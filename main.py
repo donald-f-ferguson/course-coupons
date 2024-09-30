@@ -157,7 +157,7 @@ async def auth_callback(request: Request):
             student = student_coupon_resource.get_info(student)
 
             print("In auth_callback: Student = \n", json.dumps(student, indent=2, default=str))
-            coupon = student.get("student_coupon_code", None)
+            coupon = student.get("coupon_code", None)
             test_coupon = student.get("test_coupon", None)
             coupon_value = student.get("amount", "")
 
@@ -181,10 +181,7 @@ async def auth_callback(request: Request):
                     <p>Identity Provider: {user.provider}</p>
                     <h1>Google Coupon Information</h1>
                     <p>Google Coupon: {coupon}<br>
-                    <p>Test Google Coupon: {test_coupon}<br>
                     <p>Coupon Value: {coupon_value}
-                    <h1>Next Link:</h1>
-                    <p> Let's see what happens <a href=>{next_url}.</a>
                 </body>
                 </html>
                 """
